@@ -1,0 +1,35 @@
+<section class="row" data-ng-controller="PlaylistController">
+    <md-content class="md-padding layout-wrap layout-xs-column layout-align-center-start layout-row" layout="row" layout-wrap layout-align="center start" layout-xs="column">
+        <div flex="50" flex-sm="100" flex-xs="100" layout="column" class="layout-column flex-xs-100 flex-sm-100 flex-50">
+            <md-card ng-repeat="song in playlist">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">{{song.name}}</span>
+                        <span class="md-subhead">{{song.time}}min</span>
+                    </md-card-title-text>
+                </md-card-title>
+
+                <md-card-content layout="row" layout-align="space-between" class="layout-align-space-between-stretch layout-row">
+                    <div class="md-media-xl music-thumb">
+                        <img class="md-media-xl" data-ng-src="modules/music/img/cover/default.jpg" alt="Cover" />
+                        <div class="music-thumb-overlay"></div>
+                    </div>
+
+                    <md-card-actions layout="column" class="layout-column">
+                        <button class="md-icon-button md-button  md-ink-ripple" type="button" aria-label="Favorite">
+                            <md-icon class="glyphicon glyphicon-heart"></md-icon>
+                        </button>
+                        <button class="md-icon-button md-button  md-ink-ripple" type="button" aria-label="Menu">
+                            <md-icon class="glyphicon glyphicon-menu-hamburger"></md-icon>
+                        </button>
+                        <button class="md-icon-button md-button  md-ink-ripple" type="button" aria-label="Share">
+                            <md-icon class="glyphicon glyphicon-share-alt"></md-icon>
+                        </button>
+                    </md-card-actions>
+                </md-card-content>
+            </md-card>
+        </div>
+    </md-content>
+</section>
+
+<div ng-include src="'modules/music/views/player/player.client.view.html'"></div>

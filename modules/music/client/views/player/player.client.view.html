@@ -1,0 +1,16 @@
+<section data-ng-controller="PlayerController">
+    <md-toolbar class="music-player md-whiteframe-10dp">
+        <div class="md-toolbar-tools">
+            <button class="md-raised md-button md-ink-ripple" type="button"><i class="glyphicon glyphicon-step-backward
+glyphicon glyphicon-fast-"></i></button>
+            <button class="md-raised md-button md-ink-ripple" type="button"><i class="glyphicon glyphicon-play"></i></button>
+            <button class="md-raised md-button md-ink-ripple" type="button"><i class="glyphicon glyphicon-step-forward"></i></button>
+
+            <div><img class="music-player-cover" data-ng-src="modules/music/img/cover/{{playingMusic.cover}}"></div>
+            <div class="layout-column" layout="column">
+                <div>{{playingMusic.name}}</div>
+                <div>{{playingMusic.time.min}}:{{playingMusic.time.sec}}</div>
+            </div>
+        </div>
+    </md-toolbar>
+</section>
