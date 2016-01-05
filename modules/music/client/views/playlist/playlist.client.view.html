@@ -5,14 +5,14 @@
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">{{song.name}}</span>
-                        <span class="md-subhead">{{song.time}}min</span>
+                        <span class="md-subhead">{{song.time.min}}:{{song.time.sec}}</span>
                     </md-card-title-text>
                 </md-card-title>
 
                 <md-card-content layout="row" layout-align="space-between" class="layout-align-space-between-stretch layout-row">
                     <div class="md-media-xl music-thumb">
                         <img class="md-media-xl" data-ng-src="modules/music/img/cover/default.jpg" alt="Cover" />
-                        <div class="music-thumb-overlay"></div>
+                        <div class="music-thumb-overlay" ng-click="playMusic($index)"></div>
                     </div>
 
                     <md-card-actions layout="column" class="layout-column">
