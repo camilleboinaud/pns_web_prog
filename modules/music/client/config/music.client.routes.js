@@ -13,6 +13,10 @@ angular.module('music').config(['$stateProvider',
             .state('musicStop', {
                 url: '/music',
                 templateUrl: 'modules/music/views/playlist/playlist.client.view.html'
+            })
+            .state('uploadMusic', {
+                url: '/music/upload',
+                templateUrl: 'modules/music/views/upload-music.client.view.html'
             });
     }
 ]);
