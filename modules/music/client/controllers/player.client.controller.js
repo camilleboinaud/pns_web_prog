@@ -12,7 +12,7 @@ angular.module('music').controller('PlayerController', ['$scope', '$state', '$wi
             return Music.getIsPaused();
         };
 
-        $scope.getIsLauded = function () {
+        $scope.getIsLoaded = function () {
             console.log('is loaded = '+Music.getIsLoaded());
             return Music.getIsLoaded();
         };
