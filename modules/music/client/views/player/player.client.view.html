@@ -4,8 +4,6 @@
             <button class="md-raised md-button md-ink-ripple" type="button"><i class="glyphicon glyphicon-step-backward
 glyphicon glyphicon-fast-"></i></button>
 
-            <div>{{getMusicStatus().isLoaded}}</div>
-
             <!--<button class="md-raised md-button md-ink-ripple" type="button" ng-if="!getIsLoaded()"><md-progress-circular md-mode="indeterminate"></md-progress-circular></button>-->
             <button class="md-raised md-button md-ink-ripple" type="button" ng-click="play()"  ng-if="getIsPaused()"><i class="glyphicon glyphicon-play"></i></button>
             <button class="md-raised md-button md-ink-ripple" type="button" ng-click="pause()"  ng-if="!getIsPaused()"><i class="glyphicon glyphicon-pause"></i></button>
