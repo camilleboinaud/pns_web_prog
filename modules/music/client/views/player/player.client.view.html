@@ -4,15 +4,19 @@
             <button class="md-raised md-button md-ink-ripple" type="button"><i class="glyphicon glyphicon-step-backward
 glyphicon glyphicon-fast-"></i></button>
 
-            <button class="md-raised md-button md-ink-ripple" type="button" ng-click="play()"  ng-if=playingMusic.isPaused><i class="glyphicon glyphicon-play"></i></button>
-            <button class="md-raised md-button md-ink-ripple" type="button" ng-click="pause()"  ng-if=!playingMusic.isPaused><i class="glyphicon glyphicon-pause"></i></button>
+            <div>{{getMusicStatus().isLoaded}}</div>
+
+            <button class="md-raised md-button md-ink-ripple" type="button" ng-click="play()"  ng-if="!getIsLauded()"><md-progress-circular md-mode="indeterminate"></md-progress-circular></button>
+            <button class="md-raised md-button md-ink-ripple" type="button" ng-click="play()"  ng-if="getIsPaused()"><i class="glyphicon glyphicon-play"></i></button>
+            <button class="md-raised md-button md-ink-ripple" type="button" ng-click="pause()"  ng-if="!getIsPaused()"><i class="glyphicon glyphicon-pause"></i></button>
+
 
             <button class="md-raised md-button md-ink-ripple" type="button"><i class="glyphicon glyphicon-step-forward"></i></button>
 
-            <div><img class="music-player-cover" data-ng-src="modules/music/img/cover/{{playingMusic.cover}}"></div>
+            <div><img class="music-player-cover" data-ng-src="modules/music/img/cover/{{getPlayingMusic().cover}}"></div>
             <div class="layout-column" layout="column">
-                <div>{{playingMusic.name}}</div>
-                <div>{{playingMusic.time.min}}:{{playingMusic.time.sec}}</div>
+                <div>{{getPlayingMusic().name}}</div>
+                <div>{{getPlayingMusic().time.min}}:{{getPlayingMusic().time.sec}}</div>
             </div>
             <audio id="audio1"></audio>
         </div>

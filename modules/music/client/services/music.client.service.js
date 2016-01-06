@@ -7,9 +7,10 @@
 angular.module('music').factory('Music', ['$window',
     function ($window) {
         var me = this,
-            // init audio context
-            isStarted = false,
-            playingMusic = {
+            Music = {},
+            playingMusic;
+        // init audio context
+        playingMusic = {
             name:'unknown',
             cover:'default.jpg',
             url:'',
@@ -18,6 +19,8 @@ angular.module('music').factory('Music', ['$window',
                 sec:'00'
             },
             isPaused: true,
+            isLoaded: false,
+            isStarted: false,
             audioBufferFromUrl:null,
             audioBufferSourceNode: null,
             startTime:0,
@@ -25,24 +28,25 @@ angular.module('music').factory('Music', ['$window',
             pauseTime:0, // pause duration
             offsetTime:0 // play duration
         };
-        me.audioContext = initAudioContext();
 
-        function play() {
-            console.log('service play');
-            playingMusic.isPaused = false;
-            if(!isStarted){
-                // if it is the first time, then start loading sound
+
+
+        /**
+         * play music
+         * @param callback: success callback
+         */
+        Music.playMusic = function play(callback) {
+            if(!playingMusic.isLoaded){
+                // if it is not loaded, then start loading sound
                 loadSound(me,playingMusic.url,function(audioBuffer){
                     // save the audioBuffer into playingMusic which we will use for resuming
                     playingMusic.audioBufferFromUrl = audioBuffer;
-                    playingMusic.startTime = me.audioContext.currentTime;
-                    playingMusic.lastTime = playingMusic.startTime;
-                    playSoundFromAudioBuffer(audioBuffer);
+                    playingMusic.isLoaded = true;
+                    playSoundFromAudioBuffer(audioBuffer,callback);
                 }, function(error){
                     // loadSound error callback function
                     console.log(error);
                 });
-                isStarted = true;
             } else {
                 // It plays after pause
                 if(playingMusic.audioBufferFromUrl === null){
@@ -50,12 +54,16 @@ angular.module('music').factory('Music', ['$window',
                 } else {
                     // calculate the pause duration
                     playingMusic.pauseTime = me.audioContext.currentTime - playingMusic.lastTime;
-                    playSoundFromAudioBuffer(playingMusic.audioBufferFromUrl);
+                    playSoundFromAudioBuffer(playingMusic.audioBufferFromUrl,callback);
                 }
             }
-        }
+        };
 
-        function pause(){
+        /**
+         * pause music
+         * @param callback: success callback
+         */
+        Music.pauseMusic = function pause(callback){
             console.log('pause music');
             if(playingMusic.audioBufferSourceNode !== null){
                 playingMusic.audioBufferSourceNode.stop(0);
@@ -65,16 +73,55 @@ angular.module('music').factory('Music', ['$window',
                 playingMusic.audioBufferSourceNode = null;
                 playingMusic.lastTime = me.audioContext.currentTime;
                 playingMusic.offsetTime = playingMusic.lastTime - playingMusic.startTime - playingMusic.pauseTime;
+                if(callback) callback();
             } else {
                 console.log('Something wrong when we loaded the sound');
             }
-        }
+        };
+
+        Music.getPlayingMusic = function(){
+            return playingMusic;
+        };
+
+        Music.setPlayingMusic = function (music, successCallback, errorCallback) {
+            if (playingMusic.audioBufferSourceNode){
+                playingMusic.audioBufferSourceNode.stop(0);
+            }
+            playingMusic = music;
+            loadSound(me,playingMusic.url,function(audioBuffer){
+                // save the audioBuffer into playingMusic which we will use for resuming
+                playingMusic.audioBufferFromUrl = audioBuffer;
+                playingMusic.startTime = me.audioContext.currentTime;
+                playingMusic.lastTime = playingMusic.startTime;
+                playingMusic.isLoaded = true;
+                playingMusic.isPaused = true;
+                playingMusic.isStarted = false;
+                playingMusic.pauseTime = 0;
+                playingMusic.offsetTime = 0;
+                if (successCallback) {
+                    successCallback();
+                }
+            }, function(error){
+                // loadSound error callback function
+                console.log(error);
+                if (errorCallback) errorCallback();
+            });
+        };
+
+        Music.getIsPaused =  function() {
+            return playingMusic.isPaused;
+        };
+
+        Music.getIsLoaded =  function() {
+            return playingMusic.isLoaded;
+        };
 
         /**
          * Play sound from audioBuffer
          * @param audioBuffer
+         * @param callback
          */
-        function playSoundFromAudioBuffer(audioBuffer) {
+        function playSoundFromAudioBuffer(audioBuffer,callback) {
             var audioBufferSourceNode,
                 trackVolumeNode,
             // Create a single gain node for master volume
@@ -91,8 +138,19 @@ angular.module('music').factory('Music', ['$window',
             masterVolumeNode.connect(me.audioContext.destination);
             // playing sound (when, offset, duration)
             playingMusic.audioBufferSourceNode = audioBufferSourceNode;
+
+            // mark start
+            if(!playingMusic.isStarted){
+                playingMusic.startTime = me.audioContext.currentTime;
+                playingMusic.lastTime = playingMusic.startTime;
+                playingMusic.isStarted = true;
+            }
+
+            // start playing
             audioBufferSourceNode.start(0, playingMusic.offsetTime);
-            console.log('play music');
+            playingMusic.isPaused = false;
+            console.log('start playing music');
+            if (callback) callback();
         }
 
         /**
@@ -109,6 +167,7 @@ angular.module('music').factory('Music', ['$window',
             }
             return ctx;
         }
+        me.audioContext = initAudioContext();
 
 
         /**
@@ -146,30 +205,6 @@ angular.module('music').factory('Music', ['$window',
             request.send();
         }
 
-        return {
-            getPlayingMusic: function(){
-                return playingMusic;
-            },
-            setPlayingMusic: function (music) {
-                playingMusic.name = music.name;
-                playingMusic.cover = music.cover;
-                playingMusic.url = music.url;
-                playingMusic.time = music.time;
-                playingMusic.audioBufferFromUrl = null;
-                if (playingMusic.audioBufferSourceNode !== null){
-                    playingMusic.audioBufferSourceNode.stop(0);
-                }
-                playingMusic.audioBufferSourceNode = null;
-                playingMusic.isPaused = true;
-                playingMusic.startTime = 0;
-                playingMusic.lastTime = 0;
-                playingMusic.pauseTime = 0;
-                playingMusic.offsetTime = 0;
-                isStarted = false;
-            },
-            isPaused: playingMusic.isPaused,
-            playMusic: play,
-            pauseMusic: pause
-        };
+        return Music;
     }
 ]);

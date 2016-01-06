@@ -15,7 +15,8 @@ angular.module('music').controller('PlaylistController', ['$scope', '$state', 'A
                 time:{
                     min:'03',
                     sec:'00'
-                }
+                },
+                isLoaded: true
             },
             {
                 name:'Read All About It, Pt. III',
@@ -24,7 +25,8 @@ angular.module('music').controller('PlaylistController', ['$scope', '$state', 'A
                 time:{
                     min:'04',
                     sec:'00'
-                }
+                },
+                isLoaded: true
             },
             {
                 name:'On Our Way',
@@ -33,14 +35,14 @@ angular.module('music').controller('PlaylistController', ['$scope', '$state', 'A
                 time:{
                     min:'05',
                     sec:'00'
-                }
+                },
+                isLoaded: true
             }
         ];
 
         $scope.playMusic = function playMusic(index){
             console.log('click index = '+index);
-            Music.setPlayingMusic($scope.playlist[index]);
-            Music.playMusic();
+            Music.setPlayingMusic($scope.playlist[index], Music.playMusic);
             console.log('Music playing = '+Music.getPlayingMusic().name);
         };
     }

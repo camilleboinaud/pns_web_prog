@@ -7,7 +7,19 @@ angular.module('music').controller('PlayerController', ['$scope', '$state', '$wi
     function ($scope, $state, $window, Authentication, Music) {
         $scope.authentication = Authentication;
 
-        $scope.playingMusic = Music.getPlayingMusic();
+        // !!!!!! we should use function here because of something called shadow value (with the primitive value)
+        $scope.getIsPaused = function () {
+            return Music.getIsPaused();
+        };
+
+        $scope.getIsLauded = function () {
+            console.log('is loaded = '+Music.getIsLoaded());
+            return Music.getIsLoaded();
+        };
+
+        $scope.getPlayingMusic = function () {
+            return Music.getPlayingMusic();
+        };
 
         $scope.play = function (user) {
             // for changing the button icon from play to pause
